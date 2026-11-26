@@ -1,0 +1,15 @@
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Generated PDFs
+output/
+*.pdf
+
+# IDE
+.vscode/
+.idea/

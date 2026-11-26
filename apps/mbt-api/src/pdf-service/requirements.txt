@@ -1,0 +1,6 @@
+# PDF Generation Dependencies for MB Transfer API
+# Install with: pip install -r requirements.txt
+
+weasyprint>=62.0
+Pillow>=10.0.0
+cffi>=1.16.0

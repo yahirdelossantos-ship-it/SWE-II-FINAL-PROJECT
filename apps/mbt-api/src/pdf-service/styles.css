@@ -1,0 +1,274 @@
+::root {
+	--flight-row-visibility: flex;
+}
+
+@page {
+	size: 25cm 19.5cm;
+	/* Reduced height */
+	margin: 0;
+}
+
+@font-face {
+	font-family: 'Shrikhand';
+	src: url('../../assets/fonts/Shrikhand-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body,
+html {
+	margin: 0;
+	padding: 0;
+	background-color: #FFFFFE;
+	font-family: 'Montserrat', sans-serif;
+	height: 100%;
+	width: 100%;
+}
+
+.voucher-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	/* Changed from 100vh */
+	max-height: 775px;
+	/* Added max-height */
+	background-color: #FFFFFE;
+	overflow: hidden;
+	padding: 0;
+	box-sizing: border-box;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.corner-top-right {
+	position: absolute;
+	right: 0;
+	bottom: 50%;
+	z-index: 1;
+	width: 22%;
+	/* Reduced corner size */
+}
+
+.corner-top-right img {
+	width: 100%;
+	height: auto;
+}
+
+.corner-bottom-left {
+	position: absolute;
+	top: 51%;
+	/* Only way I found of getting it stick to the bottom */
+	left: 0;
+	z-index: 1;
+	width: 22%;
+}
+
+.corner-bottom-left img {
+	width: 100%;
+	height: auto;
+}
+
+.wave-bg {
+	position: absolute;
+	top: 57%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 90%;
+	height: 80%;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	z-index: 0;
+}
+
+.logo-container {
+	display: flex;
+	justify-content: center;
+	position: relative;
+	z-index: 2;
+}
+
+.logo {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.logo-img {
+	width: 340px;
+	/* Further reduced */
+	height: 200px;
+	/* Further reduced */
+	margin-bottom: 10px;
+	background-color: transparent;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.logo-st {
+	width: 340px;
+	/* Further reduced */
+	height: 140px;
+	/* Further reduced */
+	margin-top: 10px;
+	margin-left: 50px;
+	margin-bottom: 50px;
+	background-color: transparent;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.name-container {
+	text-align: center;
+	position: relative;
+	z-index: 2;
+	padding: 5px;
+	margin: 20px;
+	/* Reduced */
+}
+
+.first-name {
+	font-family: 'Shrikhand', cursive;
+	font-size: 110px;
+	/* Reduced */
+	font-weight: 800;
+	-webkit-text-stroke: 1px #0B406C;
+	text-stroke: 12px #001f3f;
+	color: #0B406C;
+	text-transform: uppercase;
+	line-height: 0.9;
+	letter-spacing: 1px;
+	margin: 0;
+	padding: 0;
+}
+
+.last-name {
+	font-family: 'Shrikhand', cursive;
+	font-size: 110px;
+	/* Reduced */
+	font-weight: 800;
+	-webkit-text-stroke: 1px #0B406C;
+	text-stroke: 12px #001f3f;
+	color: #0B406C;
+	text-transform: uppercase;
+	line-height: 0.9;
+	letter-spacing: 1px;
+	margin: 0;
+	padding: 0;
+}
+
+.info-container {
+	display: flex;
+	justify-content: space-between;
+	align-self: bottom;
+	padding: 0 60px;
+	/* Reduced */
+	position: relative;
+	margin-top: 100px;
+	z-index: 2;
+}
+
+.left-info {
+	margin-left: 15px;
+	width: 43%;
+	max-height: 20px;
+	visibility: hidden;
+}
+
+.id-st {
+	height: 75%;
+	width: 80%;
+	margin-left: 70px;
+	margin-top: 30px;
+}
+
+.right-info {
+	position: relative;
+	width: 45%;
+	/* Increased */
+	background-color: #DBEEFE;
+	border-radius: 10px;
+	padding: 10px;
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+	min-height: 40px;
+	max-height: 130px;
+}
+
+.info-details {
+	flex: 1;
+}
+
+.info-row {
+	display: flex;
+	margin-bottom: 4px;
+	align-items: center;
+}
+
+.info-row-flight {
+	display: flex;
+	/*collapse*/
+	margin-bottom: 4px;
+	align-items: center;
+}
+
+.info-label {
+	width: 25%;
+	/* Increased */
+	min-width: 70px;
+	/* Added minimum width */
+	font-weight: 900;
+	font-size: 16px;
+	letter-spacing: 1px;
+}
+
+.info-value {
+	width: 75%;
+	/* Adjusted */
+	font-size: 16px;
+	letter-spacing: 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.arrival-container {
+	position: absolute;
+	/* Changed to absolute */
+	top: 55px;
+	right: 0px;
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 0;
+	/* Removed margin */
+}
+
+.clock-icon {
+	width: 120px;
+	/* Reduced */
+	height: auto;
+}
+
+@media print {
+	body {
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
+		color-adjust: exact !important;
+	}
+
+	.voucher-container {
+		page-break-inside: avoid;
+		height: 100%;
+	}
+
+	/* Force background colors to print */
+	* {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+}

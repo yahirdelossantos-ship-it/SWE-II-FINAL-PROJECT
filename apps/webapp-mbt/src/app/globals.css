@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+:root {
+	--font-geist-sans: Arial, Helvetica, sans-serif;
+	--font-geist-mono: "Courier New", Courier, monospace;
+
+	--app-page: #f7f7f3;
+	--app-page-alt: #edf3fb;
+
+	--app-white: #ffffff;
+
+	--app-surface: #ffffff;
+	--app-surface-muted: #f8fafc;
+
+	--app-border: #dbe4ef;
+
+	--app-text: #162033;
+	--app-text-muted: #64748b;
+
+	--app-primary: #235390;
+	--app-primary-foreground: #ffffff;
+
+	--app-accent: #58a700;
+	--app-accent-foreground: #ffffff;
+	--app-focus: #2d6cb3;
+	--app-hero-from: #235390;
+	--app-hero-via: #2d6cb3;
+	--app-hero-to: #58a700;
+
+	--app-info: #2563eb;
+	--app-success: #16a34a;
+	--app-warning: #ca8a04;
+	--app-danger: #dc2626;
+	--app-danger-foreground: #ffffff;
+
+	--app-deep-section: #0b4654;
+	--app-deep-text: #ffffff;
+}
+
+[data-theme="dark"] {
+	--app-page: #162033;
+	--app-page-alt: #111c31;
+
+	--app-white: #162033;
+
+	--app-surface: #162033;
+	--app-surface-muted: #1c2940;
+
+	--app-border: #2e415f;
+
+	--app-text: #e5eefb;
+	--app-text-muted: #9db0c8;
+
+	--app-primary: #2d6cb3;
+	--app-primary-foreground: #ffffff;
+
+	--app-accent: #58a700;
+	--app-accent-foreground: #ffffff;
+	--app-focus: #5b9be0;
+	--app-hero-from: #13233d;
+	--app-hero-via: #1c3d69;
+	--app-hero-to: #27531b;
+
+	--app-info: #60a5fa;
+	--app-success: #4ade80;
+	--app-warning: #facc15;
+	--app-danger: #f87171;
+	--app-danger-foreground: #111111;
+
+	--app-deep-section: #162033;
+	--app-deep-text: #f5f5f5;
+}
+
+@theme inline {
+	--color-background: var(--app-page);
+	--color-foreground: var(--app-text);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+}
+
+body {
+	background: var(--app-page);
+	color: var(--app-text);
+	font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.mbt-place-autocomplete {
+	background-color: var(--app-surface-muted);
+	border: 1px solid var(--app-border);
+	border-radius: 0.75rem;
+	color: var(--app-text);
+	color-scheme: light;
+	font: inherit;
+}
+
+[data-theme="dark"] .mbt-place-autocomplete {
+	color-scheme: dark;
+}
+
+/** I don't want no scrollbars here **/
+* {
+	scrollbar-width: "none";
+	-ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+
+@keyframes app-footer-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes app-float {
+	from {
+		transform: translateY(0);
+	}
+
+	to {
+		transform: translateY(18px);
+	}
+}
+
+@keyframes app-bounce-left {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+
+	50% {
+		transform: translateX(-18px);
+	}
+}
+
+@keyframes app-soft-rise {
+	from {
+		opacity: 0;
+		transform: translateY(18px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+}
+
+@keyframes app-entry-pulse {
+	0%,
+	100% {
+		transform: scale(0.92);
+		opacity: 0.78;
+	}
+	50% {
+		transform: scale(1.06);
+		opacity: 1;
+	}
+}

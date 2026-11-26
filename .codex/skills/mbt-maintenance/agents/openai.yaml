@@ -1,0 +1,4 @@
+interface:
+    display_name: "MBT Maintenance"
+    short_description: "Maintain the MBT v2 API and webapp safely"
+    default_prompt: "Use $mbt-maintenance to investigate and implement this MBT monorepo change with scoped verification."

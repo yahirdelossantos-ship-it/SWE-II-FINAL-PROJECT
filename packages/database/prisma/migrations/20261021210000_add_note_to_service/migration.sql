@@ -1,0 +1,1 @@
+ALTER TABLE "Service" ADD COLUMN "note" TEXT;

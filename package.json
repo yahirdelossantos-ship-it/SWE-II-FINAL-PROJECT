@@ -1,0 +1,26 @@
+{
+	"name": "my-turborepo",
+	"private": true,
+	"scripts": {
+		"build": "turbo run build",
+		"build:api": "turbo run build --filter=mbt-api",
+		"build:app": "cd apps/webapp-mbt && node node_modules/next/dist/bin/next build --webpack",
+		"db:deploy:test": "pnpm --filter @repo/database prisma:migrate:deploy:test",
+		"db:migrate:test": "pnpm --filter @repo/database prisma:migrate:dev:test",
+		"db:status:test": "pnpm --filter @repo/database prisma:migrate:status:test",
+		"db:validate": "pnpm --filter @repo/database prisma:validate",
+		"dev": "turbo run dev",
+		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"check-types": "turbo run check-types"
+	},
+	"devDependencies": {
+		"prettier": "^3.6.2",
+		"turbo": "^2.5.5",
+		"typescript": "5.8.3"
+	},
+	"packageManager": "pnpm@11.24.0",
+	"engines": {
+		"node": "22.x"
+	}
+}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="510" viewBox="0 0 1020 510" role="img" aria-labelledby="titulo descripcion">
+	<title id="titulo">Anexo A.1. Diagrama de casos de uso</title>
+	<desc id="descripcion">El encargado de operaciones, el coordinador y el administrador son empleados. Los empleados pueden gestionar su sesión y consultar el itinerario. El encargado de operaciones también registra traslados y actualiza la hora de recogida en el flujo documentado.</desc>
+	<defs>
+		<g id="actor" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+			<circle cx="0" cy="-20" r="8"/>
+			<path d="M0 -12V13 M-15 -1H15 M0 13L-13 30 M0 13L13 30"/>
+		</g>
+		<marker id="generalizacion" markerWidth="13" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+			<path d="M1 1L12 7L1 13Z" fill="white" stroke="#334155" stroke-width="1.5"/>
+		</marker>
+	</defs>
+	<rect width="1020" height="510" fill="white"/>
+	<rect x="395" y="24" width="600" height="462" fill="#f8fafc" stroke="#334155" stroke-width="1.8"/>
+	<g fill="none" stroke="#334155" stroke-width="1.7">
+		<path d="M119 107H206V347 M119 210H206 M119 347H206"/>
+		<path d="M206 161H282" marker-end="url(#generalizacion)"/>
+		<path d="M312 161L496 124 M312 161L496 218 M115 374L496 312 M115 374L496 406"/>
+	</g>
+	<g color="#0f172a">
+		<use href="#actor" x="104" y="108"/>
+		<use href="#actor" x="104" y="211"/>
+		<use href="#actor" x="104" y="348"/>
+		<use href="#actor" x="297" y="162"/>
+	</g>
+	<g fill="#fff" stroke="#334155" stroke-width="1.7">
+		<ellipse cx="695" cy="124" rx="199" ry="36"/>
+		<ellipse cx="695" cy="218" rx="199" ry="36"/>
+		<ellipse cx="695" cy="312" rx="199" ry="36"/>
+		<ellipse cx="695" cy="406" rx="199" ry="36"/>
+	</g>
+	<g fill="#0f172a" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">
+		<text x="695" y="58" font-size="22" font-weight="bold">Gestión del itinerario de traslados</text>
+		<text x="104" y="161">Coordinador</text>
+		<text x="104" y="264">Administrador</text>
+		<text x="104" y="408">Encargado de<tspan x="104" dy="22">operaciones</tspan></text>
+		<text x="297" y="215">Empleado</text>
+		<text x="695" y="130">CU-01 · Acceder al sistema</text>
+		<text x="695" y="224">CU-03 · Consultar el itinerario</text>
+		<text x="695" y="318">CU-02 · Registrar un traslado</text>
+		<text x="695" y="412">CU-04 · Actualizar la hora de recogida</text>
+	</g>
+</svg>
