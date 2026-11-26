@@ -5,8 +5,9 @@ node_modules
 .pnp
 .pnp.js
 
-# Local database dumps
+# Local data and generated fixtures
 *.dump
+/sacbe-demo.xlsx
 
 # Local env files
 .env

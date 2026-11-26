@@ -8,7 +8,6 @@ export type Option = { id: string; name: string; color?: string | null };
 export type PlaceOption = Option & {
 	kind: string;
 	iata: string | null;
-	zoneId: string | null;
 };
 
 export type CreateServiceInput = {
@@ -26,8 +25,6 @@ export type CreateServiceInput = {
 	dropoffDisplayName?: string;
 	allyId?: string;
 	vehicle?: { vehicleId?: string; name?: string };
-	routeId?: string;
-	price?: number;
 	note?: string;
 };
 
@@ -40,12 +37,11 @@ export type ImportRow = Omit<CreateServiceInput, "itineraryDate"> & {
 
 export type ItineraryService = {
 	id: string;
-	code: string | null;
+	code: string;
 	kindOf: "ARRIVAL" | "DEPARTURE" | "TRANSFER";
-	state: string;
 	clientName: string;
 	pickupTime: string;
-	originalPickupTime: string | null;
+	originalPickupTime: string;
 	pickupTimeModifiedAt: string | null;
 	flightCode: string | null;
 	pax: number;

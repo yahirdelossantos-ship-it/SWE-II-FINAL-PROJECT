@@ -2,12 +2,11 @@
   "name": "mbt-api",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @repo/database prisma:generate && pnpm --filter @repo/database build && ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc && node scripts/copy-pdf-service.mjs",
     "test:v2": "node --test dist/routes/v2/**/*.test.js dist/utils/*.test.js",
     "start": "node dist/index.js",
-    "security:hash-access-keys": "node dist/scripts/hash-access-keys.js",
-    "prisma:generate": "pnpm --filter @repo/database prisma:generate"
+    "db:seed:demo": "node dist/seed-demo.js"
   },
   "author": "Yahir Adolfo de los Santos Beras",
   "license": "ISC",

@@ -54,24 +54,3 @@ export async function verifyAccessKey(
 		return false;
 	}
 }
-
-export function generateAccessKey(): string {
-	return randomBytes(18).toString("base64url");
-}
-
-export function accessKeyMetadata<
-	T extends {
-		id: string;
-		employeeId: string;
-		ips: string[];
-	},
->(accessKey: T) {
-	return {
-		id: accessKey.id,
-		employeeId: accessKey.employeeId,
-		ips: accessKey.ips,
-		// Preserve the legacy response shape without disclosing stored hash material.
-		key: "••••••••",
-		hasKey: true as const,
-	};
-}

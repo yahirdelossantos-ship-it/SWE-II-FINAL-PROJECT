@@ -1,19 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-let prismaInstance: PrismaClient | undefined;
+const prisma = new PrismaClient({ log: ["warn", "error"] });
 
-export function getPrismaClient(): PrismaClient {
-	if (!prismaInstance) {
-		prismaInstance = new PrismaClient({
-			log: ["query", "warn", "error"],
-		});
-	}
-
-	return prismaInstance;
-}
-
-export const prisma = getPrismaClient();
 export default prisma;
-
-export { PrismaClient };
 export * from "@prisma/client";

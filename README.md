@@ -4,19 +4,26 @@ Aplicación interna para registrar y consultar traslados, corregir horas de reco
 
 - `apps/webapp-mbt` contiene la interfaz Next.js.
 - `apps/mbt-api` contiene la API Express en `/api/v2`.
-- `packages/database/prisma` contiene el esquema de PostgreSQL y las migraciones.
+- `packages/database/prisma` contiene el esquema y la migración inicial de PostgreSQL.
 
 ## Instalación local
 
-Se necesita Node.js 22, pnpm y una base PostgreSQL de demostración. Configura `DATABASE_URL` y `TEST_DATABASE_URL` en `packages/database/.env` con la conexión a esa base. En `apps/mbt-api/.env`, configura la misma `DATABASE_URL` y un `JWT_SECRET` de al menos 32 caracteres. Para una API en otro host o puerto, configura `MBT_API_URL` en la aplicación web.
+Usa Node.js 22, pnpm y una instancia local de PostgreSQL. Crea una base vacía llamada `mbt_academic` y configura en el archivo `.env` de la raíz las credenciales de PostgreSQL y un `JWT_SECRET` de al menos 32 caracteres.
 
 ```sh
+cp .env.example .env
 pnpm install --frozen-lockfile
-pnpm db:deploy:test
-pnpm --filter mbt-api dev
+pnpm db:setup
+pnpm dev
 ```
 
-En otra terminal, ejecuta `pnpm --filter webapp-mbt dev` y abre `http://localhost:3000`. El acceso requiere un empleado activo con clave almacenada mediante `scrypt`. Para probar el registro y la importación, la base de demostración debe incluir los catálogos correspondientes, entre ellos el aliado Sacbé y el aeropuerto PUJ.
+`pnpm db:setup` aplica la migración inicial, genera el cliente Prisma, compila los paquetes y carga los datos ficticios de la fecha operativa. Repite ese comando cuando quieras preparar los ejemplos de otra fecha. `pnpm dev` inicia la web en `http://localhost:3000` y la API en `http://localhost:3001/api/v2`. Para iniciar solo la API usa `pnpm --filter mbt-api dev`.
+
+## Demostración
+
+Inicia sesión con `operaciones@example.test` y la clave ficticia `mbt-demo-2026`. El itinerario de hoy contiene una llegada y una salida con la hora modificada. También se incluye un traslado de hace tres días para comprobar el bloqueo de edición.
+
+Usa `pnpm demo:sacbe` para generar `sacbe-demo.xlsx` en la raíz. Cárgalo desde **Importar Sacbé** con la fecha de hoy seleccionada. El archivo incluye un servicio nuevo, un duplicado y una fila inválida.
 
 ## Documentación
 

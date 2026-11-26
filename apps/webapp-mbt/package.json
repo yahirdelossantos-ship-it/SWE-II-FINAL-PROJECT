@@ -6,7 +6,8 @@
 		"dev": "next dev -p 3000",
 		"build": "next build --webpack",
 		"start": "next start",
-		"lint": "eslint"
+		"lint": "eslint",
+		"demo:sacbe": "node demo-sacbe.mjs"
 	},
 	"dependencies": {
 		"@radix-ui/react-alert-dialog": "^1.1.15",

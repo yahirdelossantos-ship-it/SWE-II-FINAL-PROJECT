@@ -15,10 +15,7 @@
 		"check-types": "tsc --noEmit",
 		"prisma:validate": "prisma validate --schema prisma/schema.prisma",
 		"prisma:generate": "prisma generate --schema prisma/schema.prisma",
-		"prisma:migrate:status:test": "node --env-file=.env prisma-target.mjs test status",
-		"prisma:migrate:deploy:test": "node --env-file=.env prisma-target.mjs test deploy",
-		"prisma:migrate:dev:test": "node --env-file=.env prisma-target.mjs test dev",
-		"prisma:studio:test": "node --env-file=.env prisma-target.mjs test studio"
+		"prisma:migrate:deploy": "prisma migrate deploy --schema prisma/schema.prisma"
 	},
 	"dependencies": {
 		"@prisma/client": "6.16.3"

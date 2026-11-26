@@ -5,14 +5,13 @@
 		"build": "turbo run build",
 		"build:api": "turbo run build --filter=mbt-api",
 		"build:app": "cd apps/webapp-mbt && node node_modules/next/dist/bin/next build --webpack",
-		"db:deploy:test": "pnpm --filter @repo/database prisma:migrate:deploy:test",
-		"db:migrate:test": "pnpm --filter @repo/database prisma:migrate:dev:test",
-		"db:status:test": "pnpm --filter @repo/database prisma:migrate:status:test",
-		"db:validate": "pnpm --filter @repo/database prisma:validate",
+		"db:validate": "prisma validate --schema packages/database/prisma/schema.prisma",
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"check-types": "turbo run check-types"
+		"check-types": "turbo run check-types",
+		"db:setup": "node --env-file-if-exists=.env packages/database/setup-demo.mjs",
+		"demo:sacbe": "pnpm --filter webapp-mbt demo:sacbe"
 	},
 	"devDependencies": {
 		"prettier": "^3.6.2",

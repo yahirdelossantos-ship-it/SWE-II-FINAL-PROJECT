@@ -1,766 +1,142 @@
 generator client {
-  provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model Zone {
-  id                             String              @id @default(cuid())
-  name                           String
-  description                    String?
-  createdAt                      DateTime            @default(now())
-  updatedAt                      DateTime            @updatedAt
-  mapCenterLat                   Float?
-  mapCenterLng                   Float?
-  mapColor                       String?
-  mapZoom                        Int?
-  polygon                        Json?
-  relevance                      Int                 @default(0)
-  images                         String[]            @default([])
-  places                         Place[]             @relation("PlaceZone")
-  priceRatesFrom                 PriceTableRate[]    @relation("PriceRateZoneFrom")
-  priceRatesTo                   PriceTableRate[]    @relation("PriceRateZoneTo")
-  settlementDestinationOverrides ServiceSettlement[] @relation("SettlementDestinationZone")
-  settlementOriginOverrides      ServiceSettlement[] @relation("SettlementOriginZone")
-
-  @@index([name])
-}
-
-model Place {
-  id             String    @id @default(cuid())
-  kind           PlaceKind
-  name           String
-  iata           String?   @db.VarChar(3)
-  latitude       Float?
-  longitude      Float?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  zoneId         String?
-  googlePlaceId  String?   @unique
-  websiteVisible Boolean   @default(true)
-  zone           Zone?     @relation("PlaceZone", fields: [zoneId], references: [id])
-
-  bookingDropoff ServiceBooking[] @relation("BookingDropoff")
-  bookingPickup  ServiceBooking[] @relation("BookingPickup")
-
-  dropoffFor Service[] @relation("ServiceDropoff")
-  pickupFor  Service[] @relation("ServicePickup")
-  Tour       Tour[]
-
-  @@unique([kind, name, iata])
-  @@index([kind, name])
-  @@index([zoneId])
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
 }
 
 model Employee {
-  id                         String                 @id @default(cuid())
-  name                       String
-  photo                      String?
-  identification             String?                @unique
-  role                       EmployeeRole
-  state                      EmployeeState          @default(WORKING)
-  age                        Int?
-  birthdate                  DateTime?
-  startedOn                  DateTime?
-  avrgWorkingHours           Int?
-  phone                      String?
-  emergencyPhone             String?
-  email                      String?                @unique
-  payAmount                  Decimal?               @db.Decimal(12, 2)
-  payFrequency               Frequency?
-  darkMode                   Boolean                @default(false)
-  appAccent                  String?
-  minimized                  Boolean                @default(false)
-  createdAt                  DateTime               @default(now())
-  updatedAt                  DateTime               @updatedAt
-  background                 String?
-  accountNumber              String?
-  accountType                AccountType?
-  bank                       String?
-  idNumber                   String?
-  accessKey                  AccessKey?
-  bankAccounts               EmployeeBankAccount[]
-  financeAccountsCreated     FinanceAccount[]       @relation("FinanceAccountCreator")
-  financeAccountsUpdated     FinanceAccount[]       @relation("FinanceAccountUpdater")
-  financeCategoriesCreated   FinanceCategory[]      @relation("FinanceCategoryCreator")
-  financeCategoriesUpdated   FinanceCategory[]      @relation("FinanceCategoryUpdater")
-  financeConfigurations      FinanceConfiguration[] @relation("FinanceConfigurationCreator")
-  financeTransactionsCreated FinanceTransaction[]   @relation("FinanceTransactionCreator")
-  financeTransactionsUpdated FinanceTransaction[]   @relation("FinanceTransactionUpdater")
-  drives                     Service[]              @relation("ServiceDriver")
-  serviceSettlementsCreated  ServiceSettlement[]    @relation("ServiceSettlementCreator")
-  serviceSettlementsUpdated  ServiceSettlement[]    @relation("ServiceSettlementUpdater")
-  servicesCreated Service[] @relation("ServiceCreator")
-  serviceBookingNotificationRecipient ServiceBookingNotificationRecipient?
-  serviceBookingEmailDeliveries ServiceBookingEmailDelivery[]
-}
-
-model EmployeeBankAccount {
-  id            String      @id @default(cuid())
-  employeeId    String
-  bank          String
-  accountNumber String
-  accountType   AccountType
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  employee      Employee    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-
-  @@index([employeeId])
+	id              String        @id @default(cuid())
+	name            String
+	email           String?       @unique
+	identification  String?       @unique
+	role            EmployeeRole
+	state           EmployeeState @default(WORKING)
+	photo           String?
+	darkMode        Boolean       @default(false)
+	minimized       Boolean       @default(false)
+	background      String?
+	createdAt       DateTime      @default(now())
+	updatedAt       DateTime      @updatedAt
+	accessKey       AccessKey?
+	servicesCreated Service[]
 }
 
 model AccessKey {
-  id         String   @id @default(cuid())
-  key        String   @unique
-  ips        String[]
-  employeeId String   @unique
-  employee   Employee @relation(fields: [employeeId], references: [id])
-}
-
-model Vehicle {
-  id                 String           @id @default(cuid())
-  name               String
-  image              String?
-  brand              String?
-  identifierDocument String?
-  state              VehicleState     @default(FUNCTIONAL)
-  paxCapacity        Int
-  luggageCapacity    Int
-  fuelType           String?
-  fuelUnitPrice      Decimal?         @db.Decimal(12, 2)
-  fuelState          VehicleFuelState @default(MIDDLE)
-  usageCount         Int              @default(0)
-  lastMaintenanceOn  DateTime?
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  airConditioning    Boolean          @default(false)
-  carryOnCapacity    Int?
-  description        String?
-  sortOrder          Int              @default(0)
-  websiteVisible     Boolean          @default(true)
-  priceTableRates    PriceTableRate[]
-  services           Service[]
-
-  bookings ServiceBooking[]
-
-  @@index([state])
-  @@index([brand])
-  @@index([websiteVisible, sortOrder])
-}
-
-model Ally {
-  id            String      @id @default(cuid())
-  name          String      @unique
-  website       String?
-  logo          String?
-  email         String?
-  contactNumber String?
-  notes         String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  color         String?
-  priceTableId  String?
-  priceTable    PriceTable? @relation(fields: [priceTableId], references: [id])
-  services      Service[]
-
-  @@index([priceTableId])
-}
-
-model ServicePdf {
-  id         String   @id @default(cuid())
-  serviceId  String   @unique
-  clientName String?
-  time       String?
-  flightCode String?
-  pax        Int?
-  hotelName  String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  checked    Boolean  @default(false)
-  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-
-  @@index([serviceId])
-}
-
-model Service {
-  id                   String             @id @default(cuid())
-  code                 String?
-  kindOf               ServiceType
-  state                ServiceState       @default(UPCOMING)
-  clientName           String
-  pickupTime           DateTime
-  flightCode           String?
-  pax                  Int
-  luggage              Int?
-  driverId             String?
-  vehicleId            String?
-  allyId               String?
-  pickupId             String?
-  dropoffId            String?
-  routeId              String?
-  price                Decimal?           @db.Decimal(12, 2)
-  itineraryId          String?
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-  dropoffLocationName  String?
-  pickupLocationName   String?
-  routeName            String?
-  vehicleTypeName      String?
-  originalPickupTime   DateTime?
-  pickupTimeModifiedAt DateTime?
-  pickupDisplayName    String?
-  dropoffDisplayName   String?
-  note                 String?
-  // Service_booking_leg_check requires bookingId and leg to be present together.
-  bookingId            String?
-  leg                  ServiceBookingLeg?
-  createdById          String?
-  ally                 Ally?              @relation(fields: [allyId], references: [id])
-  itinerary            Itinerary?         @relation(fields: [itineraryId], references: [id])
-  vehicle              Vehicle?           @relation(fields: [vehicleId], references: [id])
-  pdfProfile           ServicePdf?
-  settlement           ServiceSettlement?
-
-  driver            Employee?          @relation("ServiceDriver", fields: [driverId], references: [id])
-  dropoff           Place?             @relation("ServiceDropoff", fields: [dropoffId], references: [id])
-  pickup            Place?             @relation("ServicePickup", fields: [pickupId], references: [id])
-
-  booking           ServiceBooking? @relation(fields: [bookingId], references: [id], onDelete: Restrict)
-  createdBy         Employee?       @relation("ServiceCreator", fields: [createdById], references: [id], onDelete: Restrict)
-
-  @@unique([bookingId, leg])
-  @@index([createdById, createdAt])
-  @@index([state, pickupTime])
-  @@index([driverId, vehicleId])
-  @@index([allyId])
-  @@index([pickupId, dropoffId])
-  @@index([routeId])
-  @@index([code])
-}
-
-model ServiceSettlement {
-  id                          String                 @id @default(cuid())
-  serviceId                   String                 @unique
-  status                      SettlementStatus       @default(PENDING)
-  pricingMode                 SettlementPricingMode?
-  originZoneOverrideId        String?
-  destinationZoneOverrideId   String?
-  inferredAmount              Decimal?               @db.Decimal(12, 2)
-  finalAmount                 Decimal?               @db.Decimal(12, 2)
-  currency                    Currency?
-  priceTableId                String?
-  priceTableRateId            String?
-  accountId                   String?
-  tableNameSnapshot           String?
-  originZoneNameSnapshot      String?
-  destinationZoneNameSnapshot String?
-  vehicleNameSnapshot         String?
-  rateAmountSnapshot          Decimal?               @db.Decimal(12, 2)
-  strandedReason              String?
-  settledAt                   DateTime?
-  createdById                 String
-  updatedById                 String
-  createdAt                   DateTime               @default(now())
-  updatedAt                   DateTime               @updatedAt
-  transaction                 FinanceTransaction?
-  account                     FinanceAccount?        @relation(fields: [accountId], references: [id])
-  createdBy                   Employee               @relation("ServiceSettlementCreator", fields: [createdById], references: [id])
-  destinationZoneOverride     Zone?                  @relation("SettlementDestinationZone", fields: [destinationZoneOverrideId], references: [id])
-  originZoneOverride          Zone?                  @relation("SettlementOriginZone", fields: [originZoneOverrideId], references: [id])
-  priceTable                  PriceTable?            @relation(fields: [priceTableId], references: [id])
-  priceTableRate              PriceTableRate?        @relation(fields: [priceTableRateId], references: [id])
-  service                     Service                @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  updatedBy                   Employee               @relation("ServiceSettlementUpdater", fields: [updatedById], references: [id])
-
-  @@index([status, settledAt])
-  @@index([accountId])
-}
-
-model FinanceConfiguration {
-  id             String    @id @default("default")
-  ledgerStartsOn DateTime
-  lockedAt       DateTime?
-  configuredById String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  configuredBy   Employee  @relation("FinanceConfigurationCreator", fields: [configuredById], references: [id])
-}
-
-model PriceTable {
-  id          String              @id @default(cuid())
-  name        String              @unique
-  currency    Currency
-  active      Boolean             @default(true)
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  allies      Ally[]
-  rates       PriceTableRate[]
-  settlements ServiceSettlement[]
-
-  @@index([active])
-}
-
-model PriceTableRate {
-  id           String              @id @default(cuid())
-  priceTableId String
-  zoneFromId   String
-  zoneToId     String
-  vehicleId    String
-  amount       Decimal             @db.Decimal(12, 2)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
-  kind         PriceRateKind
-  priceTable   PriceTable          @relation(fields: [priceTableId], references: [id], onDelete: Cascade)
-  vehicle      Vehicle             @relation(fields: [vehicleId], references: [id])
-  zoneFrom     Zone                @relation("PriceRateZoneFrom", fields: [zoneFromId], references: [id])
-  zoneTo       Zone                @relation("PriceRateZoneTo", fields: [zoneToId], references: [id])
-  settlements  ServiceSettlement[]
-
-  bookings ServiceBooking[]
-
-  @@unique([priceTableId, kind, zoneFromId, zoneToId, vehicleId], map: "PriceTableRate_priceTableId_kind_zoneFromId_zoneToId_vehicleId_")
-  @@index([priceTableId, kind])
-  @@index([zoneFromId])
-  @@index([zoneToId])
-  @@index([vehicleId])
-}
-
-model FinanceAccount {
-  id             String               @id @default(cuid())
-  name           String
-  description    String?
-  institution    String?
-  currency       Currency
-  initialBalance Decimal              @db.Decimal(14, 2)
-  balanceAsOf    DateTime
-  isDefault      Boolean              @default(false)
-  active         Boolean              @default(true)
-  createdById    String
-  updatedById    String
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  createdBy      Employee             @relation("FinanceAccountCreator", fields: [createdById], references: [id])
-  updatedBy      Employee             @relation("FinanceAccountUpdater", fields: [updatedById], references: [id])
-  transactions   FinanceTransaction[]
-  settlements    ServiceSettlement[]
-
-  @@index([currency, active])
-}
-
-model FinanceCategory {
-  id           String                 @id @default(cuid())
-  name         String
-  color        String
-  emoji        String?
-  type         FinanceTransactionType
-  active       Boolean                @default(true)
-  createdById  String?
-  updatedById  String?
-  createdAt    DateTime               @default(now())
-  updatedAt    DateTime               @updatedAt
-  createdBy    Employee?              @relation("FinanceCategoryCreator", fields: [createdById], references: [id])
-  updatedBy    Employee?              @relation("FinanceCategoryUpdater", fields: [updatedById], references: [id])
-  transactions FinanceTransaction[]
-
-  @@unique([name, type])
-  @@index([type, active])
-}
-
-model FinanceTransaction {
-  id                  String                 @id @default(cuid())
-  title               String?
-  amount              Decimal                @db.Decimal(14, 2)
-  type                FinanceTransactionType
-  occurredAt          DateTime
-  note                String?
-  emoji               String?
-  accountId           String
-  categoryId          String?
-  serviceSettlementId String?                @unique
-  createdById         String
-  updatedById         String
-  createdAt           DateTime               @default(now())
-  updatedAt           DateTime               @updatedAt
-  account             FinanceAccount         @relation(fields: [accountId], references: [id])
-  category            FinanceCategory?       @relation(fields: [categoryId], references: [id])
-  createdBy           Employee               @relation("FinanceTransactionCreator", fields: [createdById], references: [id])
-  serviceSettlement   ServiceSettlement?     @relation(fields: [serviceSettlementId], references: [id], onDelete: Cascade)
-  updatedBy           Employee               @relation("FinanceTransactionUpdater", fields: [updatedById], references: [id])
-
-  @@index([occurredAt])
-  @@index([accountId, occurredAt])
-  @@index([categoryId, occurredAt])
+	id         String   @id @default(cuid())
+	key        String
+	employeeId String   @unique
+	employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }
 
 model Itinerary {
-  id             String    @id @default(cuid())
-  date           DateTime  @unique
-  sorted         Boolean   @default(false)
-  flightsChecked Boolean   @default(false)
-  timesConverted Boolean   @default(false)
-  edgeCases      Boolean   @default(false)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  services       Service[]
+	id        String    @id @default(cuid())
+	date      DateTime  @unique
+	createdAt DateTime  @default(now())
+	updatedAt DateTime  @updatedAt
+	services  Service[]
 }
 
-model WebsiteUser {
-  id String @id @default(cuid())
+model Service {
+	id                   String      @id @default(cuid())
+	code                 String
+	kindOf               ServiceType
+	clientName           String
+	pickupTime           DateTime
+	originalPickupTime   DateTime
+	pickupTimeModifiedAt DateTime?
+	pax                  Int
+	luggage              Int?
+	flightCode           String?
+	note                 String?
+	pickupLocationName   String?
+	dropoffLocationName  String?
+	pickupDisplayName    String?
+	dropoffDisplayName   String?
+	vehicleTypeName      String?
+	createdAt            DateTime    @default(now())
+	updatedAt            DateTime    @updatedAt
 
-  googleSub String? @unique
+	itineraryId String
+	createdById String
+	allyId      String?
+	pickupId    String?
+	dropoffId   String?
+	vehicleId   String?
 
-  name  String?
-  email String  @unique
-  image String?
-  phone String?
+	itinerary Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Restrict)
+	createdBy Employee  @relation(fields: [createdById], references: [id], onDelete: Restrict)
+	ally      Ally?     @relation(fields: [allyId], references: [id], onDelete: SetNull)
+	vehicle   Vehicle?  @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+	pickup    Place?    @relation("ServicePickup", fields: [pickupId], references: [id], onDelete: Restrict)
+	dropoff   Place?    @relation("ServiceDropoff", fields: [dropoffId], references: [id], onDelete: Restrict)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  bookings          ServiceBooking[]
-  tourRegistrations TourRegistration[]
-
-  @@index([email])
+	@@unique([code, kindOf])
+	@@index([itineraryId, pickupTime])
+	@@index([createdById])
 }
 
-model AddOnProduct {
-  id String @id @default(cuid())
+model Place {
+	id         String    @id @default(cuid())
+	kind       PlaceKind
+	name       String
+	iata       String?   @unique @db.VarChar(3)
+	pickupFor  Service[] @relation("ServicePickup")
+	dropoffFor Service[] @relation("ServiceDropoff")
 
-  name        String
-  description String?
-
-  priceUsd Decimal @db.Decimal(12, 2) @default(0)
-  priceDop Decimal? @db.Decimal(12, 2)
-  priceEur Decimal? @db.Decimal(12, 2)
-
-  active Boolean @default(true)
-
-  image String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  bookings BookingAddOn[]
-
-  @@index([active])
+	@@index([kind, name])
 }
 
-model ServiceBooking {
-  id String @id @default(cuid())
-
-  name  String
-  email String
-  phone String
-
-  pickupName  String
-  dropoffName String
-  serviceType ServiceType
-
-  pickupAt DateTime
-
-  pax     Int
-  luggage Int
-
-  // DO | US | MX
-  country String?
-
-  flightCode String?
-  note       String?
-
-  isRoundTrip Boolean @default(false)
-  returnAt   DateTime?
-  returnFlightCode String?
-
-  vehicleId String
-  pickupId  String
-  dropoffId String
-
-  // the default delete behavior for optional relationships is SetNull
-  userId    String?
-  rateId    String?
-
-  // snapshots, since rateId can be updated
-  currency	Currency
-  baseAmount Decimal	@db.Decimal(12, 2)
-  addOnAmount Decimal	@default(0) @db.Decimal(12, 2)
-  totalAmount Decimal	@db.Decimal(12, 2)
-
-  status BookingStatus	  @default(PENDING_PAYMENT)
-
-  addOns BookingAddOn[]
-
-  vehicle Vehicle         @relation(fields: [vehicleId], references: [id])
-  pickup  Place           @relation("BookingPickup", fields: [pickupId], references: [id])
-  dropoff Place           @relation("BookingDropoff", fields: [dropoffId], references: [id])
-  user    WebsiteUser?    @relation(fields: [userId], references: [id])
-  rate    PriceTableRate? @relation(fields: [rateId], references: [id])
-
-  createdAt         DateTime            @default(now())
-  updatedAt			DateTime			@updatedAt
-  services Service[]
-  emailDeliveries ServiceBookingEmailDelivery[]
-
-  @@index([userId, createdAt])
-  @@index([status, pickupAt])
-  @@index([email])
+model Ally {
+	id       String    @id @default(cuid())
+	name     String    @unique
+	color    String?
+	services Service[]
 }
 
-model ServiceBookingNotificationRecipient {
-  employeeId String @id
+model Vehicle {
+	id       String    @id @default(cuid())
+	name     String
+	services Service[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-}
-
-model ServiceBookingEmailDelivery {
-  id String @id @default(cuid())
-
-  bookingId          String
-  recipientEmployeeId String?
-  audience           ServiceBookingEmailAudience
-  status             ServiceBookingEmailStatus @default(PENDING)
-  recipientName      String?
-  recipientEmail     String
-  attempts           Int @default(0)
-  lastError          String?
-  lastAttemptAt      DateTime?
-  sentAt             DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  booking          ServiceBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  recipientEmployee Employee? @relation(fields: [recipientEmployeeId], references: [id], onDelete: SetNull)
-
-  @@index([bookingId, status])
-	@@index([bookingId, audience])
-  @@index([recipientEmployeeId])
-}
-
-model BookingAddOn {
-  id String @id @default(cuid())
-
-  bookingId String
-  addOnId   String?
-
-  quantity  Int
-  nameSnapshot String
-  unitAmount	Decimal	@db.Decimal(12, 2)
-  currency  Currency
-
-  createdAt DateTime @default(now())
-
-  booking      ServiceBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  addOnProduct AddOnProduct?   @relation(fields: [addOnId], references: [id])
-
-  @@unique([bookingId, addOnId])
-  @@index([addOnId])
-}
-
-model Tour {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  tourType    TourType @default(ADVENTURE)
-
-  priceUsd Decimal? @db.Decimal(12, 2)
-  priceDop Decimal? @db.Decimal(12, 2)
-  priceEur Decimal? @db.Decimal(12, 2)
-
-  featured Boolean @default(false)
-  active   Boolean @default(true)
-
-  itinerary  Json?
-  faqs Json?  // Renamed for clarity. Questions are answered by contacting, not when filling the registration form
-  tourDetail Json?
-
-  images String[] @default([])
-
-  placeId       String?
-  registrations TourRegistration[]
-
-  place Place? @relation(fields: [placeId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([active, featured])
-  @@index([tourType])
-}
-
-model TourRegistration {
-  id String @id @default(cuid())
-
-  name  String
-  phone String
-  email String
-
-  status TourRegistrationStatus @default(PENDING)
-  partySize Int		@default(1)
-  requestedFor	DateTime?
-
-  tourId String
-  userId String?
-
-  tour Tour         @relation(fields: [tourId], references: [id])
-  user WebsiteUser? @relation(fields: [userId], references: [id])
-
-  note String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tourId])
-  @@index([status, createdAt])
+	@@index([name])
 }
 
 enum ServiceType {
-  ARRIVAL
-  DEPARTURE
-  TRANSFER
-}
-
-enum ServiceState {
-  UPCOMING
-  ONGOING
-  COMPLETED
-  CANCELED
-  REFUNDED
-}
-
-enum Currency {
-  DOP
-  USD
-  EUR
-}
-
-enum FinanceTransactionType {
-  INCOME
-  EXPENSE
-}
-
-enum PriceRateKind {
-  AIRPORT
-  INTER_ZONE
-}
-
-enum BookingStatus {
-  PENDING_PAYMENT
-  CONFIRMED
-  REJECTED
-  CANCELLED
-}
-
-enum ServiceBookingLeg {
-	OUTBOUND
-	RETURN
-}
-
-enum ServiceBookingEmailAudience {
-  CUSTOMER
-  EMPLOYEE
-}
-
-enum ServiceBookingEmailStatus {
-  PENDING
-  SENT
-  FAILED
-}
-
-enum RefundStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  CANCELLED
-}
-
-enum TourRegistrationStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-}
-
-enum TourType {
-  EXCURSION
-  CLUB
-  TOUR
-  ADVENTURE
-}
-
-enum SettlementStatus {
-  PENDING
-  COMPLETED
-  CANCELED
-  FINED
-  NO_SHOW
-}
-
-enum SettlementPricingMode {
-  INFERRED
-  MANUAL
-}
-
-enum VehicleState {
-  FUNCTIONAL
-  DAMAGED
-  ONSERVICE
-  OFFSERVICE
-}
-
-enum VehicleFuelState {
-  FULL
-  MIDDLE
-  EMPTY
+	ARRIVAL
+	DEPARTURE
+	TRANSFER
 }
 
 enum EmployeeRole {
-  ADMINISTRATOR
-  DEVELOPER
-  COORDINATOR
-  MANAGER
-  DRIVER
-  STAFF
+	ADMINISTRATOR
+	COORDINATOR
+	MANAGER
 }
 
 enum EmployeeState {
-  WORKING
-  SUSPENDED
-  FIRED
-}
-
-enum Frequency {
-  HOURLY
-  DAILY
-  WEEKLY
-  MONTHLY
-  YEARLY
-}
-
-enum AccountType {
-  AHORROS
-  CORRIENTE
+	WORKING
+	SUSPENDED
+	FIRED
 }
 
 enum PlaceKind {
-  AIRPORT
-  HOTEL
-  OTHER
-  RESORT
-  BEACH
-  CLUB
-  RESTAURANT
-  MARINA
-  RESIDENCE
-  CONDO
-  RESIDENTIAL
-  VILLAS
-  BAR
-  APARTHOTEL
-  APARTMENT
-  AIRBNB
+	AIRPORT
+	HOTEL
+	OTHER
+	RESORT
+	BEACH
+	CLUB
+	RESTAURANT
+	MARINA
+	RESIDENCE
+	CONDO
+	RESIDENTIAL
+	VILLAS
+	BAR
+	APARTHOTEL
+	APARTMENT
+	AIRBNB
 }
